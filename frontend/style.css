@@ -1,0 +1,734 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #080a0f;
+    --panel: rgba(18, 21, 29, 0.72);
+    --border: rgba(255, 255, 255, 0.10);
+    --text: #e8eaf0;
+    --muted: #7f8594;
+    --accent: #a8b5ff;
+    --accent-soft: rgba(168, 181, 255, 0.14);
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            #151a28 0%,
+            #0b0e15 38%,
+            #080a0f 75%,
+            #050608 100%
+        );
+
+    color: var(--text);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.veyra-app {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+
+/* HEADER */
+
+.veyra-header {
+    position: absolute;
+    top: 28px;
+    left: 36px;
+    right: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    z-index: 50;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 3px;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+    background: #b8c2ff;
+
+    box-shadow: 0 0 12px rgba(184, 194, 255, 0.8);
+}
+
+.online-status {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+}
+
+
+/* WORKSPACE */
+
+.workspace {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+}
+
+
+/* CORE */
+
+.core-section {
+    width: 650px;
+    height: 650px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#skull-container {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.core-label {
+    position: absolute;
+    bottom: 42px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    gap: 12px;
+
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+}
+
+.core-state {
+    color: #b8c2ff;
+}
+
+
+/* VISION CARD */
+
+.vision-card {
+    position: absolute;
+
+    right: 48px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 370px;
+
+    padding: 14px;
+
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.vision-header {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 4px 4px 12px;
+
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.vision-state {
+    color: #9ca6c7;
+}
+
+
+/* CAMERA */
+
+.vision-container {
+    position: relative;
+
+    width: 100%;
+    height: 245px;
+
+    overflow: hidden;
+
+    border-radius: 12px;
+
+    background: #050609;
+}
+
+#vision-camera,
+#vision-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+#vision-camera {
+    object-fit: cover;
+}
+
+#vision-overlay {
+    pointer-events: none;
+}
+
+
+/* VISION RESULT */
+
+#vision-result {
+    position: static;
+
+    margin-top: 12px;
+
+    transform: none;
+
+    color: #cbd1e4;
+
+    font-family: inherit;
+    font-size: 12px;
+
+    letter-spacing: 0.5px;
+
+    text-align: left;
+
+    text-shadow: none;
+}
+
+
+/* VOICE */
+
+.voice-panel {
+    position: absolute;
+
+    left: 50%;
+    bottom: 38px;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    z-index: 60;
+}
+
+.voice-status {
+    margin-bottom: 10px;
+
+    font-size: 11px;
+    letter-spacing: 1px;
+
+    color: var(--muted);
+}
+
+#voice-button {
+    padding: 11px 24px;
+
+    border: 1px solid rgba(168, 181, 255, 0.28);
+    border-radius: 10px;
+
+    background: rgba(168, 181, 255, 0.08);
+
+    color: #e8eaf0;
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+
+    letter-spacing: 1.5px;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+#voice-button:hover {
+    background: rgba(168, 181, 255, 0.15);
+
+    border-color: rgba(168, 181, 255, 0.5);
+
+    transform: translateY(-1px);
+}
+
+#user-command {
+    margin-top: 9px;
+
+    font-size: 11px;
+    color: #8d93a3;
+}
+
+
+/* FOOTER */
+
+.system-footer {
+    position: absolute;
+
+    left: 36px;
+    right: 36px;
+    bottom: 28px;
+
+    display: flex;
+    justify-content: space-between;
+
+    font-size: 9px;
+    letter-spacing: 1.5px;
+
+    color: #555b69;
+
+    z-index: 40;
+}
+
+
+/* REMOVE OLD HUD */
+
+#hud,
+#veyra-hud,
+.targeting-frame,
+.holo-ring,
+.corner,
+.target-label,
+.top-bar,
+.system-info,
+
+/* =========================
+   VEYRA AI ORB
+========================= */
+
+#skull-container {
+    position: relative;
+
+    width: 520px;
+    height: 520px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+/* Main holographic orb */
+#skull-container::before {
+    content: "";
+
+    position: absolute;
+
+    width: 190px;
+    height: 190px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            rgba(255, 255, 255, 0.95),
+            rgba(184, 194, 255, 0.75) 12%,
+            rgba(120, 135, 220, 0.35) 35%,
+            rgba(90, 105, 190, 0.12) 58%,
+            transparent 72%
+        );
+
+    box-shadow:
+        0 0 30px rgba(168, 181, 255, 0.35),
+        0 0 80px rgba(120, 135, 220, 0.18),
+        inset 0 0 35px rgba(255, 255, 255, 0.18);
+
+    animation: veyraOrbPulse 4s ease-in-out infinite;
+}
+
+
+/* Outer holographic ring */
+#skull-container::after {
+    content: "";
+
+    position: absolute;
+
+    width: 280px;
+    height: 280px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(168, 181, 255, 0.22);
+
+    box-shadow:
+        0 0 25px rgba(168, 181, 255, 0.12),
+        inset 0 0 25px rgba(168, 181, 255, 0.08);
+
+    animation: veyraOrbRotate 12s linear infinite;
+}
+
+
+@keyframes veyraOrbPulse {
+
+    0%, 100% {
+        transform: scale(0.96);
+        opacity: 0.82;
+    }
+
+    50% {
+        transform: scale(1.04);
+        opacity: 1;
+    }
+}
+
+
+@keyframes veyraOrbRotate {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+/* =========================
+   NEURAL NETWORK
+========================= */
+
+.neural-network {
+    position: absolute;
+    width: 185px;
+    height: 185px;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+
+    z-index: 5;
+
+    animation: neuralFloat 5s ease-in-out infinite;
+}
+
+.node {
+    position: absolute;
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #e8ebff;
+
+    box-shadow:
+        0 0 6px rgba(232, 235, 255, 0.9),
+        0 0 14px rgba(168, 181, 255, 0.55);
+
+    animation: nodePulse 2.8s ease-in-out infinite;
+}
+
+/* central node */
+
+.node-1 {
+    left: 48%;
+    top: 46%;
+
+    width: 11px;
+    height: 11px;
+
+    box-shadow:
+        0 0 8px #ffffff,
+        0 0 22px rgba(168, 181, 255, 0.8);
+}
+
+/* surrounding nodes */
+
+.node-2 { left: 19%; top: 30%; }
+.node-3 { left: 74%; top: 25%; }
+.node-4 { left: 79%; top: 62%; }
+.node-5 { left: 30%; top: 77%; }
+.node-6 { left: 8%; top: 56%; }
+.node-7 { left: 50%; top: 10%; }
+
+
+.connection {
+    position: absolute;
+
+    height: 1px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(200, 208, 255, 0.42),
+        transparent
+    );
+
+    transform-origin: left center;
+
+    opacity: 0.45;
+}
+
+
+/* connections */
+
+.connection-1 {
+    width: 58px;
+    left: 51%;
+    top: 48%;
+    transform: rotate(-145deg);
+}
+
+.connection-2 {
+    width: 55px;
+    left: 51%;
+    top: 48%;
+    transform: rotate(-25deg);
+}
+
+.connection-3 {
+    width: 60px;
+    left: 51%;
+    top: 50%;
+    transform: rotate(43deg);
+}
+
+.connection-4 {
+    width: 58px;
+    left: 48%;
+    top: 51%;
+    transform: rotate(135deg);
+}
+
+.connection-5 {
+    width: 60px;
+    left: 46%;
+    top: 49%;
+    transform: rotate(195deg);
+}
+
+.connection-6 {
+    width: 58px;
+    left: 50%;
+    top: 45%;
+    transform: rotate(-90deg);
+}
+
+
+@keyframes nodePulse {
+    0%, 100% {
+        opacity: 0.55;
+        transform: scale(0.85);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+}
+
+@keyframes neuralFloat {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(0.98);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.02);
+    }
+}
+
+/* NODES */
+
+.node {
+    position: absolute;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #e9ecff;
+
+    box-shadow:
+        0 0 8px rgba(210, 218, 255, 0.9),
+        0 0 18px rgba(168, 181, 255, 0.6);
+}
+
+
+/* Node positions */
+
+.node-1 {
+    left: 48%;
+    top: 45%;
+    width: 10px;
+    height: 10px;
+}
+
+.node-2 {
+    left: 20%;
+    top: 28%;
+}
+
+.node-3 {
+    left: 72%;
+    top: 24%;
+}
+
+.node-4 {
+    left: 78%;
+    top: 62%;
+}
+
+.node-5 {
+    left: 30%;
+    top: 76%;
+}
+
+.node-6 {
+    left: 8%;
+    top: 55%;
+}
+
+.node-7 {
+    left: 50%;
+    top: 12%;
+}
+
+
+/* CONNECTIONS */
+
+.connection {
+    position: absolute;
+
+    height: 1px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(184, 194, 255, 0.55),
+        transparent
+    );
+
+    transform-origin: left center;
+
+    opacity: 0.65;
+}
+
+
+/* connection 1 */
+
+.connection-1 {
+    width: 60px;
+
+    left: 52%;
+    top: 48%;
+
+    transform: rotate(-150deg);
+}
+
+
+/* connection 2 */
+
+.connection-2 {
+    width: 55px;
+
+    left: 52%;
+    top: 48%;
+
+    transform: rotate(-25deg);
+}
+
+
+/* connection 3 */
+
+.connection-3 {
+    width: 65px;
+
+    left: 52%;
+    top: 50%;
+
+    transform: rotate(45deg);
+}
+
+
+/* connection 4 */
+
+.connection-4 {
+    width: 55px;
+
+    left: 48%;
+    top: 52%;
+
+    transform: rotate(135deg);
+}
+
+
+/* connection 5 */
+
+.connection-5 {
+    width: 60px;
+
+    left: 45%;
+    top: 48%;
+
+    transform: rotate(195deg);
+}
+
+
+/* connection 6 */
+
+.connection-6 {
+    width: 55px;
+
+    left: 50%;
+    top: 45%;
+
+    transform: rotate(-90deg);
+}
+
+
+/* Subtle movement */
+
+@keyframes neuralFloat {
+
+    0%, 100% {
+        transform:
+            translate(-50%, -50%)
+            scale(0.98);
+    }
+
+    50% {
+        transform:
+            translate(-50%, -50%)
+            scale(1.02);
+    }
+}

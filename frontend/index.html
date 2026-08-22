@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VEYRA</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+{
+    "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+    }
+}
+</script>
+</head>
+
+<body>
+
+    <main class="veyra-app">
+
+        <!-- Minimal header -->
+        <header class="veyra-header">
+            <div class="brand">
+                <span class="status-dot"></span>
+                <span>VEYRA</span>
+            </div>
+
+            <span class="online-status">ONLINE</span>
+        </header>
+
+
+        <!-- Main workspace -->
+        <section class="workspace">
+
+            <!-- Veyra core -->
+            <div class="core-section">
+
+                <div id="skull-container">
+                    <div class="neural-network">
+                        <span class="node node-1"></span>
+                        <span class="node node-2"></span>
+                        <span class="node node-3"></span>
+                        <span class="node node-4"></span>
+                        <span class="node node-5"></span>
+                        <span class="node node-6"></span>
+                        <span class="node node-7"></span>
+
+                        <i class="connection connection-1"></i>
+                        <i class="connection connection-2"></i>
+                        <i class="connection connection-3"></i>
+                        <i class="connection connection-4"></i>
+                        <i class="connection connection-5"></i>
+                        <i class="connection connection-6"></i>
+                    </div>
+                </div>
+
+                <div class="core-label">
+                    <span>VEYRA CORE</span>
+                    <span class="core-state">ACTIVE</span>
+                </div>
+
+            </div>
+
+
+            <!-- Vision -->
+            <aside class="vision-card">
+
+                <div class="vision-header">
+                    <span>VISION</span>
+                    <span class="vision-state">LIVE</span>
+                </div>
+
+                <div class="vision-container">
+                    <video id="vision-camera" autoplay playsinline muted>
+                    </video>
+
+                    <canvas id="vision-overlay"></canvas>
+                </div>
+
+                <div id="vision-result">
+                    VISION: SCANNING...
+                </div>
+
+            </aside>
+
+        </section>
+
+
+        <!-- Voice controls -->
+        <section class="voice-panel">
+
+            <div class="voice-status">
+                <span id="voice-status">CLICK TO SPEAK</span>
+            </div>
+
+            <button id="voice-button">
+                ACTIVATE VEYRA
+            </button>
+
+            <div id="user-command">
+                ...
+            </div>
+
+        </section>
+
+
+        <!-- Small system footer -->
+        <footer class="system-footer">
+            <span>NEURAL CORE ACTIVE</span>
+            <span>VISION LIVE</span>
+            <span>VEYRA AI</span>
+        </footer>
+
+    </main>
+
+
+    <script type="module" src="script.js"></script>
+    <script src="vision.js"></script>
+
+    <script>
+        startVisionCamera();
+    </script>
+
+</body>
+
+</html>
