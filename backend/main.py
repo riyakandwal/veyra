@@ -4,10 +4,10 @@ from dotenv import load_dotenv
 from groq import Groq
 import os
 from supabase import create_client
-from core.ai import get_ai_response
-from memory.memory import get_memory, save_conversation
+from backend.core.ai import get_ai_response
+from backend.memory.memory import get_memory, save_conversation
+from backend.vision.vision import detect_objects
 from fastapi import UploadFile, File
-from vision.vision import detect_objects
 
 
 load_dotenv()
