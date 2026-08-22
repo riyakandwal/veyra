@@ -61,7 +61,7 @@ async function sendFrameToVision() {
 
     try {
         const response = await fetch(
-            "http://127.0.0.1:8000/vision/detect",
+            "/api/vision/detect",
             {
                 method: "POST",
                 body: formData
