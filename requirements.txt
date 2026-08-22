@@ -3,6 +3,4 @@ uvicorn
 python-dotenv
 groq
 supabase
-opencv-python
-ultralytics
 python-multipart
