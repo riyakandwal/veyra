@@ -571,7 +571,8 @@ if (!SpeechRecognition) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                message: transcript
+                message: transcript,
+                vision: window.lastVisionDescription || null
             })
         });
 

@@ -129,6 +129,7 @@ async function sendFrameToVision() {
             description =
                 `I can see ${otherObjects.join(", ")}, and a ${lastObject} ${position}`;
         }
+        window.lastVisionDescription = description;
 
         // -------------------------
         // Draw detection boxes
