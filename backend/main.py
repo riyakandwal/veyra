@@ -37,6 +37,7 @@ from pydantic import BaseModel
 
 class ChatRequest(BaseModel):
     message: str
+    vision: str | None = None
 
 conversation_history = []
 
@@ -60,9 +61,19 @@ def chat(request: ChatRequest):
 
     messages.extend(memory)
 
+    user_message = request.message
+
+    if request.vision:
+        user_message = f"""
+        User message:
+        {request.message}
+
+        Current vision:
+        {request.vision}"""
+
     messages.append({
         "role": "user",
-        "content": request.message
+        "content": user_message
     })
 
     reply = get_ai_response(messages)
