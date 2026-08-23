@@ -43,51 +43,38 @@ conversation_history = []
 @app.post("/api/chat")
 @app.post("/chat")
 def chat(request: ChatRequest):
-    messages = [
-    {
-        "role": "system",
-        "content": "You are VEYRA, a helpful futuristic AI assistant. Answer clearly and concisely."
-    }
-    ]
-    messages.extend(conversation_history)
-    messages.append({
-        "role": "user",
-        "content": request.message
-        })
 
     memory = get_memory()
+
     messages = [
         {
             "role": "system",
-            "content": "You are VEYRA, a helpful futuristic AI assistant."
-            }
-        ]
+            "content": (
+                "You are VEYRA, a helpful futuristic AI assistant. "
+                "Use the previous conversation memory when relevant. "
+                "If the user asks whether you remember something, "
+                "use the conversation history to answer."
+            )
+        }
+    ]
+
     messages.extend(memory)
 
     messages.append({
         "role": "user",
         "content": request.message
-        })
-    reply = get_ai_response(messages)
-    
-    save_conversation(
-    request.message,
-    reply
-    )
+    })
 
-    conversation_history.append({
-        "role": "user",
-        "content": request.message
-        })
-    conversation_history.append({
-        "role": "assistant",
-        "content": reply
-        })
+    reply = get_ai_response(messages)
+
+    save_conversation(
+        request.message,
+        reply
+    )
 
     return {
         "reply": reply
-        }
-
+    }
 
 
 @app.get("/")
