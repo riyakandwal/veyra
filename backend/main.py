@@ -6,7 +6,7 @@ import os
 from supabase import create_client
 from backend.core.ai import get_ai_response
 from backend.memory.memory import get_memory, save_conversation
-from backend.vision.vision import detect_objects
+
 from fastapi import UploadFile, File
 
 
@@ -89,24 +89,7 @@ def chat(request: ChatRequest):
         "reply": reply
         }
 
-@app.post("/vision/detect")
-async def vision_detect(frame: UploadFile = File(...)):
-    image_bytes = await frame.read()
 
-    import numpy as np
-    import cv2
-
-    image_array = np.frombuffer(image_bytes, np.uint8)
-    image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
-
-    if image is None:
-        return {"error": "Invalid image"}
-
-    detections = detect_objects(image)
-
-    return {
-        "detections": detections
-    }
 
 @app.get("/")
 def home():
