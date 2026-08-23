@@ -20,13 +20,11 @@ body {
     overflow: hidden;
 
     background:
-        radial-gradient(
-            circle at 50% 45%,
+        radial-gradient(circle at 50% 45%,
             #151a28 0%,
             #0b0e15 38%,
             #080a0f 75%,
-            #050608 100%
-        );
+            #050608 100%);
 
     color: var(--text);
     font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -81,8 +79,6 @@ body {
 }
 
 
-/* WORKSPACE */
-
 .workspace {
     width: 100%;
     height: 100%;
@@ -95,8 +91,60 @@ body {
 }
 
 
-/* CORE */
+/* AI RESPONSE PANEL */
+.ai-response-panel {
+    position: absolute;
 
+    left: 48px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 300px;
+    min-height: 150px;
+
+    padding: 16px;
+
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.response-header {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 4px 4px 14px;
+
+    font-size: 10px;
+    letter-spacing: 2px;
+
+    color: var(--muted);
+}
+
+.response-state {
+    color: #9ca6c7;
+}
+
+#ai-response {
+    padding: 8px 4px;
+
+    min-height: 70px;
+
+    font-size: 14px;
+    line-height: 1.6;
+
+    color: #dce2ff;
+}
+
+
+/* CORE */
 .core-section {
     width: 650px;
     height: 650px;
@@ -118,18 +166,22 @@ body {
 }
 
 .core-label {
-    position: absolute;
-    bottom: 42px;
-    left: 50%;
+    position: fixed;
 
-    transform: translateX(-50%);
+    top: 72px;
+    left: 36px;
 
     display: flex;
-    gap: 12px;
+    gap: 10px;
 
     font-size: 10px;
     letter-spacing: 2px;
+
     color: var(--muted);
+
+    transform: none;
+
+    z-index: 100;
 }
 
 .core-state {
@@ -239,7 +291,7 @@ body {
     position: absolute;
 
     left: 50%;
-    bottom: 38px;
+    bottom: 75px;   /* 38px se 75px */
 
     transform: translateX(-50%);
 
@@ -251,12 +303,16 @@ body {
 }
 
 .voice-status {
-    margin-bottom: 10px;
+    min-height: 16px;
+
+    margin-bottom: 2px;
 
     font-size: 11px;
     letter-spacing: 1px;
 
     color: var(--muted);
+
+    text-align: center;
 }
 
 #voice-button {
@@ -289,10 +345,16 @@ body {
 }
 
 #user-command {
-    margin-top: 9px;
+    margin-top: 4px;
 
-    font-size: 11px;
+    min-height: 16px;
+
+    font-size: 10px;
+    letter-spacing: 0.8px;
+
     color: #8d93a3;
+
+    text-align: center;
 }
 
 
@@ -357,14 +419,12 @@ body {
     border-radius: 50%;
 
     background:
-        radial-gradient(
-            circle at 35% 30%,
+        radial-gradient(circle at 35% 30%,
             rgba(255, 255, 255, 0.95),
             rgba(184, 194, 255, 0.75) 12%,
             rgba(120, 135, 220, 0.35) 35%,
             rgba(90, 105, 190, 0.12) 58%,
-            transparent 72%
-        );
+            transparent 72%);
 
     box-shadow:
         0 0 30px rgba(168, 181, 255, 0.35),
@@ -398,7 +458,8 @@ body {
 
 @keyframes veyraOrbPulse {
 
-    0%, 100% {
+    0%,
+    100% {
         transform: scale(0.96);
         opacity: 0.82;
     }
@@ -420,6 +481,7 @@ body {
         transform: rotate(360deg);
     }
 }
+
 /* =========================
    NEURAL NETWORK
 ========================= */
@@ -473,12 +535,35 @@ body {
 
 /* surrounding nodes */
 
-.node-2 { left: 19%; top: 30%; }
-.node-3 { left: 74%; top: 25%; }
-.node-4 { left: 79%; top: 62%; }
-.node-5 { left: 30%; top: 77%; }
-.node-6 { left: 8%; top: 56%; }
-.node-7 { left: 50%; top: 10%; }
+.node-2 {
+    left: 19%;
+    top: 30%;
+}
+
+.node-3 {
+    left: 74%;
+    top: 25%;
+}
+
+.node-4 {
+    left: 79%;
+    top: 62%;
+}
+
+.node-5 {
+    left: 30%;
+    top: 77%;
+}
+
+.node-6 {
+    left: 8%;
+    top: 56%;
+}
+
+.node-7 {
+    left: 50%;
+    top: 10%;
+}
 
 
 .connection {
@@ -486,12 +571,10 @@ body {
 
     height: 1px;
 
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(200, 208, 255, 0.42),
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(200, 208, 255, 0.42),
+            transparent);
 
     transform-origin: left center;
 
@@ -545,7 +628,9 @@ body {
 
 
 @keyframes nodePulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 0.55;
         transform: scale(0.85);
     }
@@ -557,7 +642,9 @@ body {
 }
 
 @keyframes neuralFloat {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translate(-50%, -50%) scale(0.98);
     }
 
@@ -631,12 +718,10 @@ body {
 
     height: 1px;
 
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(184, 194, 255, 0.55),
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(184, 194, 255, 0.55),
+            transparent);
 
     transform-origin: left center;
 
@@ -720,15 +805,54 @@ body {
 
 @keyframes neuralFloat {
 
-    0%, 100% {
+    0%,
+    100% {
         transform:
-            translate(-50%, -50%)
-            scale(0.98);
+            translate(-50%, -50%) scale(0.98);
     }
 
     50% {
         transform:
-            translate(-50%, -50%)
-            scale(1.02);
+            translate(-50%, -50%) scale(1.02);
     }
+}
+
+body.veyra-responding #skull-container::before {
+    animation-duration: 1.5s;
+    box-shadow:
+        0 0 40px rgba(168, 181, 255, 0.5),
+        0 0 100px rgba(120, 135, 220, 0.3),
+        inset 0 0 45px rgba(255, 255, 255, 0.25);
+}
+
+body.veyra-responding #skull-container::after {
+    animation-duration: 4s;
+}
+
+#deactivate-button {
+    margin-top: 10px;
+
+    padding: 9px 20px;
+
+    border: 1px solid rgba(168, 181, 255, 0.18);
+    border-radius: 9px;
+
+    background: rgba(168, 181, 255, 0.04);
+
+    color: #8d93a3;
+
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: 1.3px;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+#deactivate-button:hover {
+    background: rgba(168, 181, 255, 0.08);
+    border-color: rgba(168, 181, 255, 0.35);
 }

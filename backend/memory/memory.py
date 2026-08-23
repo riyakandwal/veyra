@@ -16,11 +16,12 @@ def get_memory():
         supabase
         .table("conversations")
         .select("role, content")
-        .order("created_at")
+        .order("created_at", desc=True)
+        .limit(20)
         .execute()
     )
 
-    return result.data
+    return list(reversed(result.data))
 
 
 def save_conversation(user_message, assistant_reply):

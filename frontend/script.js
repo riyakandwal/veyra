@@ -1,17 +1,21 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
 
+
+const API_BASE =
+    window.location.hostname === "127.0.0.1" ||
+        window.location.hostname === "localhost"
+        ? "http://127.0.0.1:8000"
+        : "";
 const container = document.getElementById("skull-container");
 
-// -------------------------
-// Scene
-// -------------------------
+//scene
 
 const scene = new THREE.Scene();
 
-// -------------------------
+
 // Camera
-// -------------------------
+
 
 const camera = new THREE.PerspectiveCamera(
     45,
@@ -477,6 +481,8 @@ window.addEventListener("resize", () => {
 
 const voiceButton =
     document.getElementById("voice-button");
+const deactivateButton =
+    document.getElementById("deactivate-button");
 
 const voiceStatus =
     document.getElementById("voice-status");
@@ -500,14 +506,18 @@ if (!SpeechRecognition) {
 
     recognition.lang = "en-IN";
 
-    recognition.continuous = false;
+    recognition.continuous = true;
 
-    recognition.interimResults = false;
+    recognition.interimResults = true;
+
+    let veyraActive = false;
 
 
     voiceButton.addEventListener(
         "click",
         () => {
+
+            veyraActive = true;
 
             voiceStatus.textContent =
                 "LISTENING...";
@@ -515,13 +525,32 @@ if (!SpeechRecognition) {
             voiceButton.textContent =
                 "LISTENING";
 
-            recognition.start();
+            try {
+                recognition.start();
+            } catch (error) {
+                console.log(
+                    "VEYRA recognition already active"
+                );
+            }
 
         }
     );
+    deactivateButton.addEventListener("click", () => {
+
+        veyraActive = false;
+
+        recognition.stop();
+
+        voiceStatus.textContent =
+            "VEYRA DEACTIVATED";
+
+        voiceButton.textContent =
+            "ACTIVATE VEYRA";
+
+    });
 
     window.speakVeyra = function (text) {
-        voiceStatus.textContent = text;
+    
 
         const speech = new SpeechSynthesisUtterance(text);
 
@@ -544,15 +573,38 @@ if (!SpeechRecognition) {
 
         window.speechSynthesis.cancel();
         window.speechSynthesis.speak(speech);
+        speech.onend = () => {
+            document.body.classList.remove("veyra-responding");
+        };
     };
 
 
-
+    let chatRequestInProgress = false;
+    let currentRequestId = 0;
 
     recognition.onresult = async (event) => {
 
+        if (chatRequestInProgress) {
+            console.log("VEYRA: Previous request still processing...");
+            return;
+        }
+
+        const result =
+            event.results[event.results.length - 1];
+
+        if (!result.isFinal) {
+            return;
+        }
+
         const transcript =
-            event.results[0][0].transcript;
+            result[0].transcript.trim();
+
+        if (!transcript) {
+            return;
+        }
+
+        chatRequestInProgress = true;
+        voiceStatus.textContent = "THINKING...";
 
         userCommand.textContent =
             `> ${transcript}`;
@@ -560,46 +612,83 @@ if (!SpeechRecognition) {
         voiceStatus.textContent =
             "COMMAND RECEIVED";
 
-        voiceButton.textContent =
-            "ACTIVATE VEYRA";
+        console.log("User said:", transcript);
 
-        console.log(
-            "User said:",
-            transcript
-        );
+        try {
+            console.log("VEYRA: Sending request...");
 
-        console.log(
-            "VISION SENT TO VEYRA:",
-            window.lastVisionDescription
-        );
-        const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                message: transcript,
-                vision: window.lastVisionDescription || null
-            })
-        });
+            const response = await fetch(`${API_BASE}/api/chat`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: transcript,
+                    vision: window.lastVisionDescription || null
+                })
+            });
+            console.log(
+                "VEYRA: Response received:",
+                response.status
+            );
 
-        const data = await response.json();
+            if (!response.ok) {
+                throw new Error(
+                    `HTTP ${response.status}`
+                );
+            }
 
-        console.log("VEyRA REPLY:", data.reply);
-        voiceStatus.textContent = data.reply;
-        const speech = new SpeechSynthesisUtterance(data.reply);
-        speech.voice = speechSynthesis.getVoices()[2];
+            const data = await response.json();
 
-        speech.lang = "en-IN";
-        speech.rate = 1.1;
-        speech.pitch = 1.05;
-        speech.volume = 1;
+            console.log(
+                "VEYRA: JSON received:",
+                data
+            );
 
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(speech);
+            console.log(
+                "VEYRA REPLY:",
+                data.reply
+            );
 
+            voiceStatus.textContent = "REPLYING...";
+
+            const aiResponse =
+                document.getElementById("ai-response");
+
+            if (aiResponse) {
+                aiResponse.textContent =
+                    data.reply;
+            }
+            document.body.classList.add("veyra-responding");
+
+            window.speakVeyra(data.reply);
+
+        } catch (error) {
+
+            console.error(
+                "VEYRA CHAT ERROR:",
+                error
+            );
+
+            voiceStatus.textContent =
+                "VEYRA ERROR";
+
+        } finally {
+
+            // VERY IMPORTANT
+            chatRequestInProgress = false;
+
+        }
     };
 
+    recognition.onstart = () => {
+
+        if (veyraActive) {
+            document.body.classList.add("veyra-listening");
+            voiceButton.textContent = "LISTENING";
+        }
+
+    };
 
     recognition.onerror = (event) => {
 
@@ -619,8 +708,15 @@ if (!SpeechRecognition) {
 
     recognition.onend = () => {
 
-        voiceButton.textContent =
-            "ACTIVATE VEYRA";
+        if (veyraActive) {
+            voiceButton.textContent =
+                "LISTENING";
+
+            recognition.start();
+        } else {
+            voiceButton.textContent =
+                "ACTIVATE VEYRA";
+        }
 
     };
 
@@ -645,3 +741,4 @@ const voices = window.speechSynthesis.getVoices();
 voices.forEach((voice, index) => {
     console.log(index, voice.name, voice.lang);
 });
+

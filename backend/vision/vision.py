@@ -55,9 +55,7 @@ def detect_objects(frame):
 
     return detections
 
-    return detections
-
-    return detections
+    
 if __name__ == "__main__":
     print("VEYRA Vision: YOLO loaded successfully")
 

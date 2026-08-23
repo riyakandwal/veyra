@@ -26,41 +26,79 @@ async function startVisionCamera() {
         startVisionDetection();
 
     } catch (error) {
-        console.error("VEYRA VISION: CAMERA ERROR", error);
+        console.error(
+            "VEYRA VISION: CAMERA ERROR",
+            error
+        );
     }
 }
 
+
 async function sendFrameToVision() {
-    if (visionRequestInProgress) return;
 
-    const video = document.getElementById("vision-camera");
-    const overlay = document.getElementById("vision-overlay");
+    if (visionRequestInProgress) {
+        return;
+    }
 
-    if (!video || !cameraStream || !overlay) return;
+    const video =
+        document.getElementById("vision-camera");
+
+    const overlay =
+        document.getElementById("vision-overlay");
+
+    if (!video || !cameraStream || !overlay) {
+        return;
+    }
 
     visionRequestInProgress = true;
 
     try {
-        const overlayCtx = overlay.getContext("2d");
 
-        overlay.width = video.videoWidth || 640;
-        overlay.height = video.videoHeight || 480;
+        const overlayCtx =
+            overlay.getContext("2d");
+
+        overlay.width =
+            video.videoWidth || 640;
+
+        overlay.height =
+            video.videoHeight || 480;
+
+
+        // -------------------------
+        // Load vision model
+        // -------------------------
 
         if (!window.veyraVisionModel) {
-            console.log("Loading Veyra vision model...");
+
+            console.log(
+                "Loading Veyra vision model..."
+            );
 
             window.veyraVisionModel =
                 await cocoSsd.load();
 
-            console.log("VEYRA Vision Model: READY");
+            console.log(
+                "VEYRA Vision Model: READY"
+            );
         }
 
-        const predictions =
-            await window.veyraVisionModel.detect(video);
 
-        const validObjects = predictions.filter(
-            item => item.score >= 0.50
-        );
+        // -------------------------
+        // Detect objects
+        // -------------------------
+
+        const predictions =
+            await window.veyraVisionModel.detect(
+                video
+            );
+
+        const validObjects =
+            predictions.filter(
+                item => item.score >= 0.50
+            );
+
+
+        // Clear previous boxes
 
         overlayCtx.clearRect(
             0,
@@ -69,9 +107,17 @@ async function sendFrameToVision() {
             overlay.height
         );
 
+
+        // -------------------------
+        // Nothing detected
+        // -------------------------
+
         if (validObjects.length === 0) {
+
             const resultBox =
-                document.getElementById("vision-result");
+                document.getElementById(
+                    "vision-result"
+                );
 
             if (resultBox) {
                 resultBox.textContent =
@@ -81,16 +127,33 @@ async function sendFrameToVision() {
             return;
         }
 
+
+        // -------------------------
+        // Object names
+        // -------------------------
+
         const objectNames = [
             ...new Set(
-                validObjects.map(item => item.class)
+                validObjects.map(
+                    item => item.class
+                )
             )
         ];
 
-        const mainObject = validObjects[0];
 
-        const [x, y, width, height] =
-            mainObject.bbox;
+        // -------------------------
+        // Main object position
+        // -------------------------
+
+        const mainObject =
+            validObjects[0];
+
+        const [
+            x,
+            y,
+            width,
+            height
+        ] = mainObject.bbox;
 
         const centerX =
             x + width / 2;
@@ -99,29 +162,41 @@ async function sendFrameToVision() {
 
         if (centerX < overlay.width / 3) {
             position = "on your left";
-        } else if (
-            centerX >
-            (overlay.width * 2) / 3
-        ) {
+        } else if (centerX > (overlay.width * 2) / 3) {
             position = "on your right";
         }
 
+        // Exact bounding-box coordinates
+        const exactPosition =
+            `x=${Math.round(x)}, y=${Math.round(y)}, ` +
+            `width=${Math.round(width)}, height=${Math.round(height)}`;
+
+
+        // -------------------------
+        // Create vision description
+        // -------------------------
+
         let description;
+
 
         if (objectNames.length === 1) {
 
             description =
-                `I can see a ${objectNames[0]} ${position}`;
+                `I can see a ${objectNames[0]} ${position}. ` +
+                `Bounding box: ${exactPosition}.`;
 
         } else if (objectNames.length === 2) {
 
             description =
-                `I can see a ${objectNames[0]} and a ${objectNames[1]} ${position}`;
+                `I can see a ${objectNames[0]} and a ${objectNames[1]} ${position}. ` +
+                `Main object's bounding box: ${exactPosition}.`;
 
         } else {
 
             const lastObject =
-                objectNames[objectNames.length - 1];
+                objectNames[
+                objectNames.length - 1
+                ];
 
             const otherObjects =
                 objectNames.slice(0, -1);
@@ -129,7 +204,20 @@ async function sendFrameToVision() {
             description =
                 `I can see ${otherObjects.join(", ")}, and a ${lastObject} ${position}`;
         }
-        window.lastVisionDescription = description;
+
+
+        // -------------------------
+        // Store current vision
+        // -------------------------
+
+        window.lastVisionDescription =
+            description;
+
+        console.log(
+            "VISION STORED:",
+            window.lastVisionDescription
+        );
+
 
         // -------------------------
         // Draw detection boxes
@@ -144,10 +232,12 @@ async function sendFrameToVision() {
                 boxHeight
             ] = item.bbox;
 
+
             overlayCtx.strokeStyle =
                 "#c7d0ff";
 
             overlayCtx.lineWidth = 2;
+
 
             overlayCtx.strokeRect(
                 boxX,
@@ -156,69 +246,61 @@ async function sendFrameToVision() {
                 boxHeight
             );
 
+
             overlayCtx.font =
                 "14px Inter, sans-serif";
 
             overlayCtx.fillStyle =
                 "#e8eaf0";
 
+
             overlayCtx.fillText(
-                `${item.class} ${Math.round(item.score * 100)}%`,
+                `${item.class} ${Math.round(
+                    item.score * 100
+                )}%`,
                 boxX,
-                Math.max(18, boxY - 6)
+                Math.max(
+                    18,
+                    boxY - 6
+                )
             );
+
         });
 
+
         // -------------------------
-        // Vision result
+        // Vision result UI
         // -------------------------
 
         const resultBox =
-            document.getElementById("vision-result");
+            document.getElementById(
+                "vision-result"
+            );
+
 
         if (resultBox) {
 
             const objects =
                 validObjects.map(
                     item =>
-                        `${item.class} (${Math.round(item.score * 100)}%)`
+                        `${item.class} (${Math.round(
+                            item.score * 100
+                        )}%)`
                 );
 
             resultBox.textContent =
                 `I can see: ${objects.join(", ")}`;
         }
 
+
         // -------------------------
-        // Voice announcement
+        // IMPORTANT:
+        // No automatic voice here.
+        //
+        // VEYRA stores the vision
+        // silently and only speaks
+        // when the user asks.
         // -------------------------
-
-        const now = Date.now();
-
-        const detectionKey =
-            objectNames.join(",");
-
-        if (
-            detectionKey !== lastAnnouncedObject ||
-            now - lastAnnouncedTime > 8000
-        ) {
-
-            lastAnnouncedObject =
-                detectionKey;
-
-            lastAnnouncedTime =
-                now;
-
-            console.log(
-                "VEYRA:",
-                description
-            );
-
-            if (window.speakVeyra) {
-                window.speakVeyra(
-                    description
-                );
-            }
-        }
 
     } catch (error) {
 
@@ -234,30 +316,62 @@ async function sendFrameToVision() {
     }
 }
 
+
+// -------------------------
+// Vision detection loop
+// -------------------------
+
 let visionInterval = null;
-let lastAnnouncedObject = null;
-let lastAnnouncedTime = 0;
+
 
 function startVisionDetection() {
-    if (visionInterval) return;
 
-    visionInterval = setInterval(() => {
-        sendFrameToVision();
-    }, 500);
+    if (visionInterval) {
+        return;
+    }
+
+    visionInterval =
+        setInterval(() => {
+
+            sendFrameToVision();
+
+        }, 500);
 }
 
+
+// -------------------------
+// Stop vision detection
+// -------------------------
+
 function stopVisionDetection() {
+
     if (visionInterval) {
-        clearInterval(visionInterval);
+
+        clearInterval(
+            visionInterval
+        );
+
         visionInterval = null;
     }
 }
 
+
+// -------------------------
+// Stop camera
+// -------------------------
+
 function stopVisionCamera() {
+
     if (cameraStream) {
-        cameraStream.getTracks().forEach(track => track.stop());
+
+        cameraStream
+            .getTracks()
+            .forEach(track => {
+                track.stop();
+            });
 
         cameraStream = null;
+
         stopVisionDetection();
     }
 }

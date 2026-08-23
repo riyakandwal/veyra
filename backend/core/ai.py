@@ -13,7 +13,13 @@ def get_ai_response(messages):
 
     response = client.chat.completions.create(
         model="openai/gpt-oss-20b",
-        messages=messages
+        messages=messages,
+        temperature=0.4,
+        max_tokens=80,
+        reasoning_effort="low"
     )
 
-    return response.choices[0].message.content
+    print("AI RESPONSE OBJECT:", response)
+    print("AI CONTENT:", repr(response.choices[0].message.content))
+
+    return response.choices[0].message.content or ""
