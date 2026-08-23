@@ -547,6 +547,8 @@ if (!SpeechRecognition) {
     };
 
 
+
+
     recognition.onresult = async (event) => {
 
         const transcript =
@@ -564,6 +566,11 @@ if (!SpeechRecognition) {
         console.log(
             "User said:",
             transcript
+        );
+
+        console.log(
+            "VISION SENT TO VEYRA:",
+            window.lastVisionDescription
         );
         const response = await fetch("/api/chat", {
             method: "POST",
