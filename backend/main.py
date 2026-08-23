@@ -40,10 +40,9 @@ class ChatRequest(BaseModel):
 
 conversation_history = []
 
+@app.post("/api/chat")
 @app.post("/chat")
-
 def chat(request: ChatRequest):
-
     messages = [
     {
         "role": "system",
